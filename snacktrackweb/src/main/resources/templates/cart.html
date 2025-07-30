@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cart | SnackTrack</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<style>
+	.navbar {
+	            z-index: 9999;
+	        }
+</style>
+<body>
+	
+	<!-- Navbar -->
+	   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+	       <div class="container-fluid">
+	           <a class="navbar-brand me-5" href="/">
+	               <img src="fast-food.png" alt="SnackTrack Logo" width="34px" height="30px" class="d-inline-block align-text-top">
+	               SnackTrack
+	           </a>
+	           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+	               <span class="navbar-toggler-icon"></span>
+	           </button>
+	           <div class="collapse navbar-collapse" id="navbarNav">
+	               <ul class="navbar-nav me-auto">
+	                   <li class="nav-item me-4">
+	                       <a class="nav-link" href="/">Home</a>
+	                   </li>
+	                   <li class="nav-item me-4">
+	                       <a class="nav-link" href="/aboutUs">About Us</a>
+	                   </li>
+	                   <li class="nav-item me-4">
+	                       <a class="nav-link" href="/products">Products</a>
+	                   </li>
+	                   <li class="nav-item me-4">
+	                       <a class="nav-link active" href="/contactUs">Contact Us</a>
+	                   </li>
+					<li class="nav-item me-5">
+					   <a class="nav-link" href="/orders">Orders</a>
+					</li>
+	               </ul>
+	           </div>
+	       </div>
+	   </nav>
+	<br><br>
+		
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Your Cart</h1>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="item : ${cartItems}">
+                    <td th:text="${item.product.name}"></td>
+                    <td>
+                        <form method="post" action="/update-cart" class="d-inline">
+                            <input type="hidden" name="cartItemId" th:value="${item.id}">
+                            <button type="submit" class="btn btn-light" name="quantity" th:value="${item.quantity - 1}" th:disabled="${item.quantity <= 1}">-</button>
+                            <span th:text="${item.quantity}"></span>
+                            <button type="submit" class="btn btn-light" name="quantity" th:value="${item.quantity + 1}">+</button>
+                        </form>
+                    </td>
+                    <td>₹<span th:text="${item.product.price}"></span></td>
+                    <td>₹<span th:text="${item.totalPrice}"></span></td>
+                    <td>
+                        <form method="post" action="/delete-cart-item">
+                            <input type="hidden" name="cartItemId" th:value="${item.id}">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3 class="text-right">Total: ₹<span th:text="${totalPrice}"></span></h3>
+        <a href="/checkout" class="btn btn-success btn-block">Checkout</a>
+    </div>
+</body>
+</html>
